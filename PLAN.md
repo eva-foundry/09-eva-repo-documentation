@@ -1,3 +1,13 @@
+<!-- eva-primed-plan -->
+
+## EVA Ecosystem Tools
+
+- Data model: GET http://localhost:8010/model/projects/09-eva-repo-documentation
+- 29-foundry agents: C:\eva-foundry\eva-foundation\29-foundry\agents\
+- 48-eva-veritas audit: run audit_repo MCP tool
+
+---
+
 # EVA Domain Assistant (dev2) - Comprehensive Architecture Documentation Proposal
 2026-01-29
 
@@ -8,8 +18,8 @@ This proposal outlines comprehensive visual documentation of the **EVA Jurisprud
 1. **Azure Infrastructure Topology** (63 resources discovered)
 2. **Document Ingestion Pipeline** (12 Azure Functions, 8 processing queues)
 3. **RAG Query Execution Flow** (5-stage hybrid search with GPT-4)
-4. **Service Interconnections** (Frontend → Backend → Enrichment → Azure services)
-5. **Data Flow Diagrams** (Blob storage → Vector index → LLM response)
+4. **Service Interconnections** (Frontend ? Backend ? Enrichment ? Azure services)
+5. **Data Flow Diagrams** (Blob storage ? Vector index ? LLM response)
 
 **Deliverable:** 
 Comprehensive set of documents with **15+ ASCII diagrams** and **10+ SVG diagrams** documenting every architectural layer from network topology to token-level prompt construction.

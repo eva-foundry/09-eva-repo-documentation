@@ -1,5 +1,26 @@
 # Project 09: EVA Domain Assistant Repository Documentation
 
+<!-- eva-primed -->
+<!-- foundation-primer: 2026-03-03 by agent:copilot -->
+
+## EVA Ecosystem Integration
+
+| Tool | Purpose | How to Use |
+|------|---------|------------|
+| 37-data-model | Single source of truth for all project entities | GET http://localhost:8010/model/projects/09-eva-repo-documentation |
+| 29-foundry | Agentic capabilities (search, RAG, eval, observability) | C:\eva-foundry\eva-foundation\29-foundry |
+| 48-eva-veritas | Trust score and coverage audit | MCP tool: audit_repo / get_trust_score |
+| 07-foundation-layer | Copilot instructions primer + governance templates | MCP tool: apply_primer / audit_project |
+
+**Agent rule**: Query the data model API before reading source files.
+```powershell
+Invoke-RestMethod "http://localhost:8010/model/agent-guide"   # complete protocol
+Invoke-RestMethod "http://localhost:8010/model/agent-summary" # all layer counts
+```
+
+---
+
+
 ## Purpose
 
 This project evaluates the EVA Domain Assistant JP 1.2 repository as a reference implementation for Retrieval Augmented Generation (RAG) systems. Through code-based inspection and analysis, we document the architectural patterns, implementation strategies, and technical capabilities that can inform future RAG system development and deployment within government contexts.
@@ -41,97 +62,97 @@ This system is part of ESDC's broader EVA Foundation initiative led by the AI Ce
 ## Repo Findings (Code-derived)
 
 **Architecture & Framework**:
-• **Multi-service architecture** with 4 primary components: FastAPI backend, React frontend, Flask enrichment service, and Azure Functions document pipeline  
+? **Multi-service architecture** with 4 primary components: FastAPI backend, React frontend, Flask enrichment service, and Azure Functions document pipeline  
   Evidence: `app/backend/app.py`, `app/frontend/src/`, `app/enrichment/app.py`, `functions/` directories
 
-• **8 specialized RAG approaches** supporting different retrieval strategies from pure LLM to hybrid search with web integration  
+? **8 specialized RAG approaches** supporting different retrieval strategies from pure LLM to hybrid search with web integration  
   Evidence: `approaches/` directory with `chatreadretrieveread.py`, `mathassistant.py`, `chatwebretrieveread.py`
 
-• **Async-first implementation** using FastAPI, AsyncAzureOpenAI, and streaming Server-Sent Events for real-time responses  
+? **Async-first implementation** using FastAPI, AsyncAzureOpenAI, and streaming Server-Sent Events for real-time responses  
   Evidence: `async def run()` patterns in approach classes, `StreamingResponse` usage in `app.py`
 
 **Document Processing Pipeline**:
-• **12 Azure Functions** orchestrating document ingestion, OCR, chunking, embedding, and indexing workflows  
+? **12 Azure Functions** orchestrating document ingestion, OCR, chunking, embedding, and indexing workflows  
   Evidence: `functions/` directory structure with `FileUploadedEtrigger`, `TextEnrichment`, `FileFormRecSubmissionPDF`
 
-• **Azure Document Intelligence OCR** for PDF processing using `prebuilt-layout` model  
+? **Azure Document Intelligence OCR** for PDF processing using `prebuilt-layout` model  
   Evidence: `functions/FileFormRecSubmissionPDF/__init__.py` lines 105-115, `AZURE_FORM_RECOGNIZER_ENDPOINT` config
 
-• **Format-agnostic processing** supporting PDF, DOCX, HTML, CSV, images, MSG, RTF, XML, JSON, MD with specialized routing  
+? **Format-agnostic processing** supporting PDF, DOCX, HTML, CSV, images, MSG, RTF, XML, JSON, MD with specialized routing  
   Evidence: Queue routing logic in `FileUploadedEtrigger/__init__.py` lines 205-240, format-specific processors
 
-• **Fixed-size chunking** using LangChain RecursiveCharacterTextSplitter with 1500 chars, 100 overlap  
+? **Fixed-size chunking** using LangChain RecursiveCharacterTextSplitter with 1500 chars, 100 overlap  
   Evidence: `functions/FileLayoutParsingOther/__init__.py` lines 480-490, hardcoded chunk_size=1500
 
-• **Canadian government document detection** with special handling for regulations, acts, and gazette publications  
+? **Canadian government document detection** with special handling for regulations, acts, and gazette publications  
   Evidence: `is_canadian_regulation_pdf()` function with patterns like "c.r.c", "sor-", "dors-", "canada gazette"
 
 **Bilingual & Internationalization**:
-• **Language detection and translation pipeline** with automatic EN/FR processing and configurable target languages  
+? **Language detection and translation pipeline** with automatic EN/FR processing and configurable target languages  
   Evidence: `detect_language()` and `translate_response()` methods in `chatreadretrieveread.py`
 
-• **Dual-field indexing** maintaining original and translated content for cross-language search capabilities  
+? **Dual-field indexing** maintaining original and translated content for cross-language search capabilities  
   Evidence: `title` and `translated_title` fields in `create_vector_index.json`
 
-• **Language-aware search analysis** with configurable analyzers for different linguistic contexts  
+? **Language-aware search analysis** with configurable analyzers for different linguistic contexts  
   Evidence: `"analyzer": "$SEARCH_INDEX_ANALYZER"` in search index schema
 
 **Search & Retrieval Implementation**:
-• **Hybrid vector + keyword search** combining semantic similarity with traditional text matching  
+? **Hybrid vector + keyword search** combining semantic similarity with traditional text matching  
   Evidence: `VectorizedQuery` usage with `search_text` parameter in approach implementations
 
-• **Citation-enforced responses** using structured prompts that mandate source references in [File1], [File2] format  
+? **Citation-enforced responses** using structured prompts that mandate source references in [File1], [File2] format  
   Evidence: `SYSTEM_MESSAGE_CHAT_CONVERSATION` template requiring pipe-separated source citations
 
-• **Multi-tier relevance ranking** with optional semantic reranking and configurable result counts  
+? **Multi-tier relevance ranking** with optional semantic reranking and configurable result counts  
   Evidence: `USE_SEMANTIC_RERANKER` configuration and `top` parameter handling
 
-• **Metadata-rich retrieval** with page numbers, chunk tracking, and full citation paths available at answer time  
+? **Metadata-rich retrieval** with page numbers, chunk tracking, and full citation paths available at answer time  
   Evidence: `citation_lookup` assembly in `chatreadretrieveread.py` with chunk_file, page_number, tags fields
 
 **Authentication & Security**:
-• **Role-based access control (RBAC)** with Azure AD group integration and container-level permissions  
+? **Role-based access control (RBAC)** with Azure AD group integration and container-level permissions  
   Evidence: `shared_code/utility_rbck.py` functions like `find_container_and_role()`
 
-• **Multi-cloud authentication** supporting Azure Government and commercial clouds with managed identity  
+? **Multi-cloud authentication** supporting Azure Government and commercial clouds with managed identity  
   Evidence: `AzureAuthorityHosts.AZURE_GOVERNMENT` handling in credential configuration
 
-• **User profile management** with Cosmos DB persistence for group selections and access patterns  
+? **User profile management** with Cosmos DB persistence for group selections and access patterns  
   Evidence: `UserProfile` class in `shared_code/user_profile.py`
 
 **Infrastructure & Deployment**:
-• **Infrastructure as Code** using Terraform with modular architecture and environment-specific configurations  
+? **Infrastructure as Code** using Terraform with modular architecture and environment-specific configurations  
   Evidence: `infra/main.tf` with modular `core/` directory structure
 
-• **Private network deployment** with VNet integration and private endpoints for all Azure services  
+? **Private network deployment** with VNet integration and private endpoints for all Azure services  
   Evidence: Private DNS zone configurations for `privatelink.openai.azure.com` domains
 
-• **Automated CI/CD pipeline** with separate deployment targets for infrastructure, applications, and search indexes  
+? **Automated CI/CD pipeline** with separate deployment targets for infrastructure, applications, and search indexes  
   Evidence: `Makefile` commands and `scripts/` deployment automation
 
 **Monitoring & Evaluation**:
-• **Comprehensive audit logging** tracking all operations, user interactions, and system events to Cosmos DB  
+? **Comprehensive audit logging** tracking all operations, user interactions, and system events to Cosmos DB  
   Evidence: `StatusLog` class usage across functions and approaches
 
-• **Functional test suite** validating end-to-end pipeline processing across all supported file formats  
+? **Functional test suite** validating end-to-end pipeline processing across all supported file formats  
   Evidence: `tests/run_tests.py` with format-specific search queries and 45-minute timeout
 
-• **Performance monitoring** with OpenTelemetry integration and Azure Application Insights  
+? **Performance monitoring** with OpenTelemetry integration and Azure Application Insights  
   Evidence: `azure-monitor-opentelemetry` dependency and tracing imports
 
 **Configuration Management**:
-• **Centralized environment configuration** with 53+ settings covering all service endpoints and feature flags  
+? **Centralized environment configuration** with 53+ settings covering all service endpoints and feature flags  
   Evidence: `core/shared_constants.py` ENV dictionary and configuration loading patterns
 
-• **Configuration categories** (from inventory analysis):  
+? **Configuration categories** (from inventory analysis):  
   - **Critical Required**: 31 settings (system fails without these)
   - **Optional with Defaults**: 15 settings (graceful degradation)
   - **Feature Flags**: 7 settings (enable/disable functionality)
 
-• **Fallback and resilience patterns** with optional service degradation and retry logic  
+? **Fallback and resilience patterns** with optional service degradation and retry logic  
   Evidence: `OPTIMIZED_KEYWORD_SEARCH_OPTIONAL=true`, `ENRICHMENT_OPTIONAL=true` for local dev
 
-• **Multi-source configuration loading**:  
+? **Multi-source configuration loading**:  
   - `app/backend/backend.env` - Backend-specific settings
   - `scripts/environments/.env` - Terraform deployment variables
   - `functions/local.settings.json` - Azure Functions runtime config
@@ -156,70 +177,70 @@ This system is part of ESDC's broader EVA Foundation initiative led by the AI Ce
 ## Architecture Snapshot (as implemented)
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              User Interface                                     │
-│  ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────────────────┐ │
-│  │  React Frontend │    │   Chat Interface │    │   Admin/Config Panels      │ │
-│  │  (Vite + TypeScript)  │   (SSE Streaming) │    │   (RBAC + User Profile)   │ │
-│  └─────────────────┘    └──────────────────┘    └─────────────────────────────┘ │
-└─────────────────────────┬───────────────────────────────────────────────────────┘
-                          │ HTTPS/WebSocket
-┌─────────────────────────▼───────────────────────────────────────────────────────┐
-│                           API Gateway Layer                                    │
-│  ┌─────────────────────────────────────────────────────────────────────────┐   │
-│  │                    FastAPI Backend (app.py)                             │   │
-│  │  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────────────┐   │   │
-│  │  │   8 RAG         │  │   RBAC Router   │  │   Session Management    │   │   │
-│  │  │   Approaches    │  │   Auth/Groups   │  │   Cosmos DB             │   │   │
-│  │  └─────────────────┘  └─────────────────┘  └─────────────────────────┘   │   │
-│  └─────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────┬───────────────────────────────────────────────────────┘
-                          │ Internal Service Mesh
-            ┌─────────────┴─────────────┐
-            │                           │
-┌───────────▼──────────┐    ┌──────────▼─────────────────────────────────────────┐
-│   Enrichment Service │    │            Document Processing Pipeline            │
-│   (Flask + Embeddings)    │                 (12 Azure Functions)               │
-│  ┌─────────────────┐ │    │  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-│  │  Azure OpenAI   │ │    │  │FileUploadEtrig│  │ OCR Processing│  │Text       │ │
-│  │  Embeddings     │ │    │  │Queue Routing │  │ PDF/Office   │  │Enrichment │ │
-│  │  SentenceTransf │ │    │  └──────────────┘  └──────────────┘  └───────────┘ │
-│  └─────────────────┘ │    │          │                 │                │      │
-└──────────────────────┘    │          ▼                 ▼                ▼      │
-                            │  ┌──────────────┐  ┌──────────────┐  ┌───────────┐ │
-                            │  │Language      │  │Chunking      │  │Index      │ │
-                            │  │Detection/    │  │Metadata      │  │Update     │ │
-                            │  │Translation   │  │Extraction    │  │Search     │ │
-                            │  └──────────────┘  └──────────────┘  └───────────┘ │
-                            └─────────────────────────────────────────────────────┘
-                                          │
-                                          ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                            Azure Service Layer                                 │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐  ┌───────────┐ │
-│  │  Azure OpenAI   │  │Azure Cognitive  │  │  Azure Blob     │  │Azure      │ │
-│  │  GPT-4 + Ada-002│  │Search (Hybrid)  │  │  Storage        │  │Cosmos DB  │ │
-│  │  Chat + Embedds │  │Vector + Keyword │  │  Documents      │  │Sessions   │ │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘  └───────────┘ │
-│                                                                                │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
-│  │Azure AI Services│  │  Azure Queues   │  │  Azure          │              │ 
-│  │Translation +    │  │  Pipeline       │  │  Government     │              │
-│  │Content Safety   │  │  Orchestration  │  │  Cloud Support  │              │
-│  └─────────────────┘  └─────────────────┘  └─────────────────┘              │
-└─────────────────────────────────────────────────────────────────────────────────┘
-                                          │
-                                          ▼
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                       Network Security & Infrastructure                        │
-│  ┌─────────────────────────────────────────────────────────────────────────┐   │
-│  │                      Azure Private Network (VNet)                       │   │
-│  │   ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────────┐ │   │
-│  │   │Private Endpoints│    │  Private DNS    │    │   Network Security  │ │   │
-│  │   │All Azure Services    │  Zone Resolution│    │   Groups + Firewall │ │   │
-│  │   └─────────────────┘    └─────────────────┘    └─────────────────────┘ │   │
-│  └─────────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────────┘
+???????????????????????????????????????????????????????????????????????????????????
+?                              User Interface                                     ?
+?  ???????????????????    ????????????????????    ??????????????????????????????? ?
+?  ?  React Frontend ?    ?   Chat Interface ?    ?   Admin/Config Panels      ? ?
+?  ?  (Vite + TypeScript)  ?   (SSE Streaming) ?    ?   (RBAC + User Profile)   ? ?
+?  ???????????????????    ????????????????????    ??????????????????????????????? ?
+???????????????????????????????????????????????????????????????????????????????????
+                          ? HTTPS/WebSocket
+???????????????????????????????????????????????????????????????????????????????????
+?                           API Gateway Layer                                    ?
+?  ???????????????????????????????????????????????????????????????????????????   ?
+?  ?                    FastAPI Backend (app.py)                             ?   ?
+?  ?  ???????????????????  ???????????????????  ???????????????????????????   ?   ?
+?  ?  ?   8 RAG         ?  ?   RBAC Router   ?  ?   Session Management    ?   ?   ?
+?  ?  ?   Approaches    ?  ?   Auth/Groups   ?  ?   Cosmos DB             ?   ?   ?
+?  ?  ???????????????????  ???????????????????  ???????????????????????????   ?   ?
+?  ???????????????????????????????????????????????????????????????????????????   ?
+???????????????????????????????????????????????????????????????????????????????????
+                          ? Internal Service Mesh
+            ?????????????????????????????
+            ?                           ?
+????????????????????????    ??????????????????????????????????????????????????????
+?   Enrichment Service ?    ?            Document Processing Pipeline            ?
+?   (Flask + Embeddings)    ?                 (12 Azure Functions)               ?
+?  ??????????????????? ?    ?  ????????????????  ????????????????  ????????????? ?
+?  ?  Azure OpenAI   ? ?    ?  ?FileUploadEtrig?  ? OCR Processing?  ?Text       ? ?
+?  ?  Embeddings     ? ?    ?  ?Queue Routing ?  ? PDF/Office   ?  ?Enrichment ? ?
+?  ?  SentenceTransf ? ?    ?  ????????????????  ????????????????  ????????????? ?
+?  ??????????????????? ?    ?          ?                 ?                ?      ?
+????????????????????????    ?          ?                 ?                ?      ?
+                            ?  ????????????????  ????????????????  ????????????? ?
+                            ?  ?Language      ?  ?Chunking      ?  ?Index      ? ?
+                            ?  ?Detection/    ?  ?Metadata      ?  ?Update     ? ?
+                            ?  ?Translation   ?  ?Extraction    ?  ?Search     ? ?
+                            ?  ????????????????  ????????????????  ????????????? ?
+                            ???????????????????????????????????????????????????????
+                                          ?
+                                          ?
+???????????????????????????????????????????????????????????????????????????????????
+?                            Azure Service Layer                                 ?
+?  ???????????????????  ???????????????????  ???????????????????  ????????????? ?
+?  ?  Azure OpenAI   ?  ?Azure Cognitive  ?  ?  Azure Blob     ?  ?Azure      ? ?
+?  ?  GPT-4 + Ada-002?  ?Search (Hybrid)  ?  ?  Storage        ?  ?Cosmos DB  ? ?
+?  ?  Chat + Embedds ?  ?Vector + Keyword ?  ?  Documents      ?  ?Sessions   ? ?
+?  ???????????????????  ???????????????????  ???????????????????  ????????????? ?
+?                                                                                ?
+?  ???????????????????  ???????????????????  ???????????????????              ?
+?  ?Azure AI Services?  ?  Azure Queues   ?  ?  Azure          ?              ? 
+?  ?Translation +    ?  ?  Pipeline       ?  ?  Government     ?              ?
+?  ?Content Safety   ?  ?  Orchestration  ?  ?  Cloud Support  ?              ?
+?  ???????????????????  ???????????????????  ???????????????????              ?
+???????????????????????????????????????????????????????????????????????????????????
+                                          ?
+                                          ?
+???????????????????????????????????????????????????????????????????????????????????
+?                       Network Security & Infrastructure                        ?
+?  ???????????????????????????????????????????????????????????????????????????   ?
+?  ?                      Azure Private Network (VNet)                       ?   ?
+?  ?   ???????????????????    ???????????????????    ??????????????????????? ?   ?
+?  ?   ?Private Endpoints?    ?  Private DNS    ?    ?   Network Security  ? ?   ?
+?  ?   ?All Azure Services    ?  Zone Resolution?    ?   Groups + Firewall ? ?   ?
+?  ?   ???????????????????    ???????????????????    ??????????????????????? ?   ?
+?  ???????????????????????????????????????????????????????????????????????????   ?
+???????????????????????????????????????????????????????????????????????????????????
 ```
 
 ## How each one of these are implemented
@@ -642,7 +663,7 @@ def test_language_detection_accuracy():
     """Validate EN/FR detection and translation quality"""
     test_phrases = [
         ("What are the benefits?", "en", "Quels sont les avantages?"),
-        ("Réglementation sur les congés", "fr", "Leave regulations"),
+        ("R?glementation sur les cong?s", "fr", "Leave regulations"),
     ]
     # Test detection accuracy and translation quality
 
@@ -803,22 +824,22 @@ newman run apim_test_collection.json --environment local.json
 ## Project Status
 
 ### Completed Documentation (Evidence-Based)
-✅ **Architecture analysis**: Multi-service pattern with 4 components  
-✅ **Configuration inventory**: 53+ environment variables documented  
-✅ **Technology stack**: Versions and dependencies identified  
-✅ **JP Plan-2 gap analysis**: 15% current coverage, implementation roadmap  
-✅ **EVA Foundation integration**: Context within broader ESDC initiative  
-✅ **Security patterns**: RBAC, private endpoints, audit logging  
-✅ **Deployment complexity**: Terraform IaC, private network requirements  
-✅ **End-to-end pipeline analysis**: Complete ingestion→chunking→indexing→retrieval flow with file paths and line numbers
-✅ **File type processing**: PDF (Azure Document Intelligence), XML/JSON/TXT (Unstructured library), specialized routing
-✅ **Chunking algorithm**: Fixed 1500 char RecursiveCharacterTextSplitter with 100 char overlap
-✅ **Metadata schema**: 15+ fields including bilingual content, page tracking, citation mapping  
+? **Architecture analysis**: Multi-service pattern with 4 components  
+? **Configuration inventory**: 53+ environment variables documented  
+? **Technology stack**: Versions and dependencies identified  
+? **JP Plan-2 gap analysis**: 15% current coverage, implementation roadmap  
+? **EVA Foundation integration**: Context within broader ESDC initiative  
+? **Security patterns**: RBAC, private endpoints, audit logging  
+? **Deployment complexity**: Terraform IaC, private network requirements  
+? **End-to-end pipeline analysis**: Complete ingestion?chunking?indexing?retrieval flow with file paths and line numbers
+? **File type processing**: PDF (Azure Document Intelligence), XML/JSON/TXT (Unstructured library), specialized routing
+? **Chunking algorithm**: Fixed 1500 char RecursiveCharacterTextSplitter with 100 char overlap
+? **Metadata schema**: 15+ fields including bilingual content, page tracking, citation mapping  
 
 ### TO BE COMPLETED - Requires Testing/Investigation
-🔄 **Performance benchmarks**: Load testing and scalability limits  
-🔄 **Cost analysis**: Azure service costs and usage optimization  
-🔄 **Security validation**: Penetration testing and vulnerability assessment  
-🔄 **Search quality evaluation**: Golden dataset and accuracy metrics  
-🔄 **Operational procedures**: Monitoring, backup, disaster recovery  
-🔄 **Production readiness**: End-to-end deployment validation
+?? **Performance benchmarks**: Load testing and scalability limits  
+?? **Cost analysis**: Azure service costs and usage optimization  
+?? **Security validation**: Penetration testing and vulnerability assessment  
+?? **Search quality evaluation**: Golden dataset and accuracy metrics  
+?? **Operational procedures**: Monitoring, backup, disaster recovery  
+?? **Production readiness**: End-to-end deployment validation
